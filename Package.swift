@@ -14,9 +14,7 @@ let package = Package(
             targets: ["ScaledFont"]),
     ],
     targets: [
-        .target(
-            name: "ScaledFont",
-            exclude: ["Examples"]),
+        .target(name: "ScaledFont"),
         .testTarget(
             name: "ScaledFontTests",
             dependencies: ["ScaledFont"],
