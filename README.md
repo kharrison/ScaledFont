@@ -136,3 +136,4 @@ When using SwiftUI you create the scaled font and add it to the environment of a
 The following blog post on [useyourloaf.com](https://useyourloaf.com) provide more details:
 
 + [Using A Custom Font With Dynamic Type](https://useyourloaf.com/blog/using-a-custom-font-with-dynamic-type/)
++ [Scaling Custom SwiftUI Fonts With Dynamic Type](https://useyourloaf.com/blog/scaling-custom-swiftui-fonts-with-dynamic-type/)
