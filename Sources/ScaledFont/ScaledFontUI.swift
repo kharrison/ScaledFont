@@ -30,7 +30,7 @@ import SwiftUI
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 extension ScaledFont.StyleKey {
-    init?(_ textStyle: Font.TextStyle) {
+    internal init?(_ textStyle: Font.TextStyle) {
         switch textStyle {
         case .largeTitle: self = .largeTitle
         case .title: self = .title
@@ -63,7 +63,7 @@ extension ScaledFont {
     ///   a font for this text style the default system
     ///   font is returned.
 
-    func font(forTextStyle textStyle: Font.TextStyle) -> Font {
+    internal func font(forTextStyle textStyle: Font.TextStyle) -> Font {
         if #available(iOS 14.0, tvOS 14.0, watchOS 7.0, *) {
             guard let styleKey = StyleKey(textStyle),
                   let fontDescription = styleDictionary?[styleKey.rawValue]
@@ -108,13 +108,13 @@ private struct ScaledFontModifier: ViewModifier {
 }
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-public extension View {
+extension View {
     /// Sets the text style of the scaled font for text
     /// in the view.
     /// - Parameter textStyle: A dynamic type text styles
     /// - Returns: A View that uses the scaled font with the
     ///   specified dynamic type text style.
-    func scaledFont(_ textStyle: Font.TextStyle = .body) -> some View {
+    public func scaledFont(_ textStyle: Font.TextStyle = .body) -> some View {
         return modifier(ScaledFontModifier(textStyle: textStyle))
     }
 }
@@ -124,20 +124,20 @@ private struct ScaledFontKey: EnvironmentKey {
 }
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-public extension EnvironmentValues {
+extension EnvironmentValues {
     /// A custom font that supports dynamic type
     /// text styles.
-    var scaledFont: ScaledFont {
+    public var scaledFont: ScaledFont {
         get { self[ScaledFontKey.self] }
         set { self[ScaledFontKey.self] = newValue }
     }
 }
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-public extension View {
+extension View {
     /// Set the scaledFont environment property
     /// - Parameter scaledFont: A ScaledFont to use
-    func scaledFont(_ scaledFont: ScaledFont) -> some View {
+    public func scaledFont(_ scaledFont: ScaledFont) -> some View {
         environment(\.scaledFont, scaledFont)
     }
 }

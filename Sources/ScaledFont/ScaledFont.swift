@@ -102,19 +102,19 @@ import UIKit
 
 @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
 public struct ScaledFont {
-    enum StyleKey: String, Decodable {
+    internal enum StyleKey: String, Decodable {
         case largeTitle, title, title2, title3
         case headline, subheadline, body, callout
         case footnote, caption, caption2
     }
 
-    struct FontDescription: Decodable {
+    internal struct FontDescription: Decodable {
         let fontSize: CGFloat
         let fontName: String
     }
 
-    typealias StyleDictionary = [StyleKey.RawValue: FontDescription]
-    var styleDictionary: StyleDictionary?
+    internal typealias StyleDictionary = [StyleKey.RawValue: FontDescription]
+    internal var styleDictionary: StyleDictionary?
 
     /// Create a `ScaledFont`
     ///
@@ -161,7 +161,7 @@ public struct ScaledFont {
 
 @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
 extension ScaledFont.StyleKey {
-    init?(_ textStyle: UIFont.TextStyle) {
+    internal init?(_ textStyle: UIFont.TextStyle) {
         switch textStyle {
         case .largeTitle: self = .largeTitle
         case .title1: self = .title
