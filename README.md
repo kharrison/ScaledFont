@@ -131,6 +131,25 @@ When using SwiftUI you create the scaled font and add it to the environment of a
     .scaledFont(.headline)
     ```
 
+**Note: A SwiftUI view presented in a sheet does not inherit the environment of the presenting view**. If you want to use a scaled font in the presented view you will need to pass it in the environment:
+
+```swift
+struct ContentView: View {
+  @Environment(\.scaledFont) private var scaledFont
+  @State private var isShowingSheet = false
+  
+  var body: some View {
+    Button("Present View") {
+        isShowingSheet = true
+    }
+    .sheet(isPresented: $isShowingSheet) {
+        SheetView()
+        .environment(\.scaledFont, scaledFont)
+    }
+  }
+}
+```
+
 ## Further Reading
 
 The following blog posts on [useyourloaf.com](https://useyourloaf.com) provide more details:
