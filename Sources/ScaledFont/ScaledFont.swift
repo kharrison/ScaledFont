@@ -91,7 +91,7 @@ import UIKit
 /// .environment(\.scaledFont, scaledFont)
 /// ```
 ///
-/// Then apply the scaled fint view modifier to any view containing
+/// Then apply the scaled font view modifier to any view containing
 /// text in the view hierarchy:
 ///
 /// ```swift
