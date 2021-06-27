@@ -17,6 +17,8 @@ The value of each entry is a dictionary with two keys:
 + `fontName`: A `String` which is the font name.
 + `fontSize`: A number which is the point size to use at the `.large` (base) content size.
 
+If you're not sure which font sizes to use for each style refer to the typography section of the [Apple Human Interface Guidelines for iOS](https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/typography/). It lists the font metrics Apple uses for the default San Francisco font.
+
 For example, to use a 17 pt Noteworthy-Bold font for the `.headline` style at the `.large` content size:
 
 ```
