@@ -143,7 +143,7 @@ extension View {
 }
 
 #if swift(>=5.3)
-@available(iOS 14.0, *)
+@available(iOS 14.0, tvOS 14.0, watchOS 7.0, *)
 struct ModifierLibrary: LibraryContentProvider {
     @LibraryContentBuilder
     func modifiers(base: Text) -> [LibraryItem] {
