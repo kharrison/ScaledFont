@@ -161,20 +161,24 @@ public struct ScaledFont {
 
 @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
 extension ScaledFont.StyleKey {
-    internal init?(_ textStyle: UIFont.TextStyle) {
+    init?(_ textStyle: UIFont.TextStyle) {
+#if !os(tvOS)
+        if #available(watchOS 5.0, *) {
+            if textStyle == .largeTitle { self = .largeTitle }
+        }
+#endif
         switch textStyle {
-        case .largeTitle: self = .largeTitle
-        case .title1: self = .title
-        case .title2: self = .title2
-        case .title3: self = .title3
-        case .headline: self = .headline
-        case .subheadline: self = .subheadline
-        case .body: self = .body
-        case .callout: self = .callout
-        case .footnote: self = .footnote
-        case .caption1: self = .caption
-        case .caption2: self = .caption2
-        default: return nil
+            case .title1: self = .title
+            case .title2: self = .title2
+            case .title3: self = .title3
+            case .headline: self = .headline
+            case .subheadline: self = .subheadline
+            case .body: self = .body
+            case .callout: self = .callout
+            case .footnote: self = .footnote
+            case .caption1: self = .caption
+            case .caption2: self = .caption2
+            default: return nil
         }
     }
 }
