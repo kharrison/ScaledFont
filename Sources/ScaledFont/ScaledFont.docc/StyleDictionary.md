@@ -48,9 +48,13 @@ families.sorted().forEach {
 }
 ```
 
+**Note that the system installed fonts are not the same for iOS, tvOS and watchOS platforms.**
+
 ## Example Style Dictionaries
 
-See the `Examples` folder included in this package for some examples. The `Noteworthy` style dictionary uses a built-in iOS font.
+See the `Examples` folder included in this package for some examples. The `Futura` font is available on iOS, tvOS and watchOS.
+
+The `Noteworthy` style dictionary uses a built-in iOS font.
 
 ![Noteworthy font](noteworthy)
 
