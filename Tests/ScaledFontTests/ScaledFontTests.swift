@@ -26,123 +26,100 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 
-@testable import ScaledFont
+import ScaledFont
 import XCTest
 
+@available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
 final class ScaledFontTests: XCTestCase {
-    func testStyleDictionary() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        XCTAssertNotNil(scaledFont.styleDictionary)
-    }
-
+    private let testFont = "Futura"
+    private let defaultFontName = "Futura-Medium"
+    private let boldFontName = "Futura-Bold"
+    private let italicFontName = "Futura-MediumItalic"
+    
+    #if !os(tvOS)
     func testLargeTitleStyle() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .largeTitle)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 34)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .largeTitle)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
+    #endif
 
     func testTitle1Style() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .title1)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 28)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .title1)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
 
     func testTitle2Style() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .title2)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 22)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .title2)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
 
     func testTitle3Style() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .title3)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 20)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .title3)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
 
     func testHeadlineStyle() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .headline)
-        XCTAssertEqual(title.fontName, "Noteworthy-Bold")
-        XCTAssertEqual(title.pointSize, 17)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .headline)
+        XCTAssertEqual(font.fontName, boldFontName)
     }
 
     func testSubheadlineStyle() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .subheadline)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 15)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .subheadline)
+        XCTAssertEqual(font.fontName, italicFontName)
     }
 
     func testBodyStyle() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .body)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 17)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .body)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
 
     func testCalloutStyle() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .callout)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 16)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .callout)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
 
     func testFootnoteStyle() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .footnote)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 13)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .footnote)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
 
     func testCaption1Style() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .caption1)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 12)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .caption1)
+        XCTAssertEqual(font.fontName, italicFontName)
     }
 
     func testCaption2Style() {
-        let fontName = "Noteworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .caption2)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 11)
+        let scaledFont = ScaledFont(fontName: testFont, bundle: .module)
+        let font = scaledFont.font(forTextStyle: .caption2)
+        XCTAssertEqual(font.fontName, italicFontName)
     }
 
     func testFallbackWhenHeadlineStyleMissing() {
-        let fontName = "Notworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .headline)
-        XCTAssertEqual(title.familyName, ".AppleSystemUIFont")
+        let scaledFont = ScaledFont(fontName: "MissingHeadline", bundle: .module)
+        let font = scaledFont.font(forTextStyle: .headline)
+        XCTAssertEqual(font.familyName, ".AppleSystemUIFont")
     }
 
     func testTitleStyleWhenHeadlineStyleMissing() {
-        let fontName = "Notworthy"
-        let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .title1)
-        XCTAssertEqual(title.fontName, "Noteworthy-Light")
-        XCTAssertEqual(title.pointSize, 28)
+        let scaledFont = ScaledFont(fontName: "MissingHeadline", bundle: .module)
+        let font = scaledFont.font(forTextStyle: .title1)
+        XCTAssertEqual(font.fontName, defaultFontName)
     }
 
     func testFallbackWhenDictionaryInvalid() {
         let fontName = "InvalidBodyStyle"
         let scaledFont = ScaledFont(fontName: fontName, bundle: .module)
-        let title = scaledFont.font(forTextStyle: .title1)
-        XCTAssertEqual(title.familyName, ".AppleSystemUIFont")
+        let font = scaledFont.font(forTextStyle: .body)
+        XCTAssertEqual(font.familyName, ".AppleSystemUIFont")
     }
 }

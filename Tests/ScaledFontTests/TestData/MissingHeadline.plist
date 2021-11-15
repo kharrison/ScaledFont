@@ -5,70 +5,70 @@
 	<key>largeTitle</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-Medium</string>
 		<key>fontSize</key>
 		<integer>34</integer>
 	</dict>
 	<key>title</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-Medium</string>
 		<key>fontSize</key>
 		<integer>28</integer>
 	</dict>
 	<key>title2</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-Medium</string>
 		<key>fontSize</key>
 		<integer>22</integer>
 	</dict>
 	<key>title3</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-Medium</string>
 		<key>fontSize</key>
 		<integer>20</integer>
 	</dict>
 	<key>subheadline</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-MediumItalic</string>
 		<key>fontSize</key>
 		<integer>15</integer>
 	</dict>
 	<key>body</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-Medium</string>
 		<key>fontSize</key>
 		<integer>17</integer>
 	</dict>
 	<key>callout</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-Medium</string>
 		<key>fontSize</key>
 		<integer>16</integer>
 	</dict>
 	<key>footnote</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-Medium</string>
 		<key>fontSize</key>
 		<integer>13</integer>
 	</dict>
 	<key>caption</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-MediumItalic</string>
 		<key>fontSize</key>
 		<integer>12</integer>
 	</dict>
 	<key>caption2</key>
 	<dict>
 		<key>fontName</key>
-		<string>Noteworthy-Light</string>
+		<string>Futura-MediumItalic</string>
 		<key>fontSize</key>
 		<integer>11</integer>
 	</dict>
