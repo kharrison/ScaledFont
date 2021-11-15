@@ -1,5 +1,8 @@
 # ScaledFont - Custom Fonts With Dynamic Type
 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fkharrison%2FScaledFont%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/kharrison/ScaledFont)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fkharrison%2FScaledFont%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/kharrison/ScaledFont)
+
 **A utility type to help you use custom fonts with dynamic type.**
 
 Dynamic type is an **essential iOS feature** that allows the user to choose their preferred text size. Fully supporting dynamic type with a custom font requires two things:
