@@ -162,14 +162,14 @@ public struct ScaledFont {
 @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
 extension ScaledFont.StyleKey {
     init?(_ textStyle: UIFont.TextStyle) {
-    #if !os(tvOS)
+        #if !os(tvOS)
         if #available(watchOS 5.0, *) {
             if textStyle == .largeTitle {
                 self = .largeTitle
                 return
             }
         }
-    #endif
+        #endif
         switch textStyle {
             case .title1: self = .title
             case .title2: self = .title2
