@@ -1,4 +1,4 @@
-//  Copyright (c) 2017-2021 Keith Harrison. All rights reserved.
+//  Copyright (c) 2017-2024 Keith Harrison. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -101,7 +101,7 @@ import UIKit
 ///
 
 @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
-public struct ScaledFont {
+public struct ScaledFont: Sendable {
     internal enum StyleKey: String, Decodable {
         case largeTitle, title, title2, title3
         case headline, subheadline, body, callout

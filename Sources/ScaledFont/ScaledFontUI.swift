@@ -1,4 +1,4 @@
-//  Copyright © 2021 Keith Harrison. All rights reserved.
+//  Copyright © 2021-2024 Keith Harrison. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -130,7 +130,7 @@ public extension View {
 }
 
 private struct ScaledFontKey: EnvironmentKey {
-    static var defaultValue = ScaledFont(fontName: "Default")
+    static let defaultValue = ScaledFont(fontName: "Default")
 }
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, *)
