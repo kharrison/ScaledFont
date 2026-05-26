@@ -12,7 +12,7 @@ A style dictionary is a property list file that you include with your app. Add a
 -  `headline`, `subheadline`, `body`, `callout`
 -  `footnote`, `caption`, `caption2`
 
-The value of each entry is a dictionary with two keys:
+For a custom font, the value of each entry is a dictionary with two keys:
 
 + `fontName`: A `String` which is the font name.
 + `fontSize`: A number which is the point size to use at the `.large` (base) content size.
@@ -32,6 +32,41 @@ For example, to use a 17 pt Noteworthy-Bold font for the `.headline` style at th
   </dict>
 </dict>
 ```
+
+For a system font, omit `fontName` and use the optional variant keys:
+
++ `design`: `serif` or `monospaced`
++ `weight`: `bold`
+
+For example, to use a serif system font for the `.subheadline` style:
+
+```
+<dict>
+  <key>subheadline</key>
+  <dict>
+    <key>design</key>
+    <string>serif</string>
+  </dict>
+</dict>
+```
+
+Unsupported variants are ignored. Custom font entries continue using
+`fontName` and `fontSize`; system font entries fallback to the normal
+system font.
+
+You can also override the style dictionary at the call site:
+
+```swift
+Text("Metadata")
+  .scaledFont(.subheadline, design: .serif, weight: .bold)
+```
+
+Call-site variants take precedence over the style dictionary. Supplying a
+`design` uses the matching system font design for that view when the entry
+does not specify `fontName`. Supplying `weight` applies that weight to the
+system font when the entry does not specify `fontName`. For custom font
+entries, `weight: .bold` uses a matching bold face from the same font family
+when one is available; otherwise it keeps the configured `fontName`.
 
 You do not need to include an entry for every text style but if you try to use a text style that is not included in the dictionary it will fallback to the system preferred font.
 

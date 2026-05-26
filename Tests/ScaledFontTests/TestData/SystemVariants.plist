@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>body</key>
+    <dict>
+        <key>design</key>
+        <string>serif</string>
+    </dict>
+    <key>headline</key>
+    <dict>
+        <key>design</key>
+        <string>monospaced</string>
+        <key>weight</key>
+        <string>bold</string>
+    </dict>
+    <key>subheadline</key>
+    <dict>
+        <key>design</key>
+        <string>rounded</string>
+        <key>weight</key>
+        <string>semibold</string>
+    </dict>
+    <key>caption</key>
+    <dict>
+        <key>fontName</key>
+        <string>Futura-Medium</string>
+        <key>fontSize</key>
+        <integer>12</integer>
+        <key>design</key>
+        <string>rounded</string>
+        <key>weight</key>
+        <string>semibold</string>
+    </dict>
+</dict>
+</plist>

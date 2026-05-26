@@ -26,7 +26,15 @@
 //  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 //  POSSIBILITY OF SUCH DAMAGE.
 
+#if canImport(UIKit)
+import UIKit
+typealias PlatformFont = UIFont
+typealias PlatformFontDescriptor = UIFontDescriptor
+#elseif canImport(AppKit)
 import AppKit
+typealias PlatformFont = NSFont
+typealias PlatformFontDescriptor = NSFontDescriptor
+#endif
 
 /// A utility type to help you use custom fonts with
 /// dynamic type.
@@ -43,7 +51,8 @@ import AppKit
 /// -  `headline`, `subheadline`, `body`, `callout`
 /// -  `footnote`, `caption`, `caption2`
 ///
-/// The value of each entry is a dictionary with two keys:
+/// For a custom font, the value of each entry is a dictionary
+/// with two keys:
 ///
 /// + `fontName`: A `String` which is the font name.
 /// + `fontSize`: A number which is the point size to use
@@ -61,6 +70,17 @@ import AppKit
 ///             <integer>17</integer>
 ///         </dict>
 ///     </dict>
+///
+/// For a system font, omit `fontName` and use the optional
+/// variant keys:
+///
+/// + `design`: `serif` or `monospaced`
+/// + `weight`: `bold`
+///
+/// You can override the style dictionary at the call site:
+///
+///     Text("Metadata")
+///     .scaledFont(.subheadline, design: .serif, weight: .bold)
 ///
 /// You do not need to include an entry for every text style
 /// but if you try to use a text style that is not included
@@ -100,6 +120,7 @@ import AppKit
 /// ```
 ///
 
+@available(iOS 11.0, macOS 11.0, tvOS 11.0, watchOS 4.0, *)
 public struct ScaledFont {
     internal enum StyleKey: String, Decodable {
         case largeTitle, title, title2, title3
@@ -108,8 +129,18 @@ public struct ScaledFont {
     }
 
     internal struct FontDescription: Decodable {
-        let fontSize: CGFloat
-        let fontName: String
+        let fontSize: CGFloat?
+        let fontName: String?
+        let design: FontDesign?
+        let weight: FontWeight?
+    }
+
+    public enum FontDesign: String {
+        case serif, monospaced
+    }
+
+    public enum FontWeight: String {
+        case bold
     }
 
     internal typealias StyleDictionary = [StyleKey.RawValue: FontDescription]
@@ -145,21 +176,178 @@ public struct ScaledFont {
     ///   a font for this text style the default preferred
     ///   font is returned.
 
-    public func font(forTextStyle textStyle: NSFont.TextStyle) -> NSFont {
-        guard let styleKey = StyleKey(textStyle),
-              let fontDescription = styleDictionary?[styleKey.rawValue],
-              let font = NSFont(name: fontDescription.fontName, size: fontDescription.fontSize)
-        else {
-            return NSFont.preferredFont(forTextStyle: textStyle)
+    #if canImport(UIKit)
+    public func font(
+        forTextStyle textStyle: UIFont.TextStyle,
+        design: FontDesign? = nil,
+        weight: FontWeight? = nil
+    ) -> UIFont {
+        font(forPlatformTextStyle: textStyle, design: design, weight: weight)
+    }
+    #elseif canImport(AppKit)
+    public func font(
+        forTextStyle textStyle: NSFont.TextStyle,
+        design: FontDesign? = nil,
+        weight: FontWeight? = nil
+    ) -> NSFont {
+        font(forPlatformTextStyle: textStyle, design: design, weight: weight)
+    }
+    #endif
+
+    private func font(
+        forPlatformTextStyle textStyle: PlatformFont.TextStyle,
+        design: FontDesign?,
+        weight: FontWeight?
+    ) -> PlatformFont {
+        let styleKey = StyleKey(textStyle)
+        let fontDescription = styleKey.flatMap { styleDictionary?[$0.rawValue] }
+        let effectiveDesign = design ?? fontDescription?.design
+        let effectiveWeight = weight ?? fontDescription?.weight
+
+        if let fontName = fontDescription?.fontName,
+           let fontSize = fontDescription?.fontSize,
+           var font = PlatformFont(name: fontName, size: fontSize) {
+            if effectiveWeight == .bold {
+                font = boldFontIfAvailable(for: font)
+            }
+
+            #if canImport(UIKit)
+            let fontMetrics = UIFontMetrics(forTextStyle: textStyle)
+            return fontMetrics.scaledFont(for: font)
+            #elseif canImport(AppKit)
+            return font
+            #endif
+        }
+
+        return systemFont(forTextStyle: textStyle, design: effectiveDesign, weight: effectiveWeight)
+    }
+
+    private func systemFont(
+        forTextStyle textStyle: PlatformFont.TextStyle,
+        design: FontDesign?,
+        weight: FontWeight?
+    ) -> PlatformFont {
+        #if canImport(UIKit)
+        let preferredFont = PlatformFont.preferredFont(forTextStyle: textStyle)
+        let baseFont: PlatformFont
+        if weight == .bold {
+            baseFont = PlatformFont.systemFont(ofSize: preferredFont.pointSize, weight: .bold)
+        } else {
+            baseFont = preferredFont
+        }
+
+        let font: PlatformFont
+        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, *),
+           let design,
+           let descriptor = baseFont.fontDescriptor.withDesign(design.systemDesign) {
+            font = PlatformFont(descriptor: descriptor, size: baseFont.pointSize)
+        } else {
+            font = baseFont
+        }
+
+        let fontMetrics = UIFontMetrics(forTextStyle: textStyle)
+        return fontMetrics.scaledFont(for: font)
+        #elseif canImport(AppKit)
+        let preferredFont = PlatformFont.preferredFont(forTextStyle: textStyle)
+        var font = preferredFont
+
+        if weight == .bold {
+            font = PlatformFont.systemFont(ofSize: preferredFont.pointSize, weight: .bold)
+        }
+
+        if let design,
+           let descriptor = font.fontDescriptor.withDesign(design.systemDesign),
+           let designedFont = NSFont(descriptor: descriptor, size: font.pointSize) {
+            font = designedFont
         }
 
         return font
+        #endif
+    }
+
+    private func boldFontIfAvailable(for font: PlatformFont) -> PlatformFont {
+        #if canImport(UIKit)
+        guard let boldFontName = PlatformFont
+            .fontNames(forFamilyName: font.familyName)
+            .first(where: { fontName in
+                guard fontName != font.fontName,
+                      let candidate = PlatformFont(name: fontName, size: font.pointSize)
+                else {
+                    return false
+                }
+
+                return candidate.fontDescriptor.symbolicTraits.contains(.traitBold)
+            }),
+            let boldFont = PlatformFont(name: boldFontName, size: font.pointSize)
+        else {
+            return font
+        }
+
+        return boldFont
+        #elseif canImport(AppKit)
+        let boldFont = NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask)
+        guard boldFont.fontName != font.fontName,
+              boldFont.fontDescriptor.symbolicTraits.contains(.bold)
+        else {
+            return font
+        }
+
+        return boldFont
+        #endif
     }
 }
 
+extension ScaledFont.FontDescription {
+    private enum CodingKeys: String, CodingKey {
+        case fontSize, fontName, design, weight
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        fontSize = try container.decodeIfPresent(CGFloat.self, forKey: .fontSize)
+        fontName = try container.decodeIfPresent(String.self, forKey: .fontName)
+
+        if let rawDesign = try container.decodeIfPresent(String.self, forKey: .design) {
+            design = ScaledFont.FontDesign(rawValue: rawDesign)
+        } else {
+            design = nil
+        }
+
+        if let rawWeight = try container.decodeIfPresent(String.self, forKey: .weight) {
+            weight = ScaledFont.FontWeight(rawValue: rawWeight)
+        } else {
+            weight = nil
+        }
+    }
+}
+
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
+extension ScaledFont.FontDesign {
+    var systemDesign: PlatformFontDescriptor.SystemDesign {
+        switch self {
+            case .serif: return .serif
+            case .monospaced: return .monospaced
+        }
+    }
+}
+
+@available(iOS 11.0, macOS 11.0, tvOS 11.0, watchOS 4.0, *)
 extension ScaledFont.StyleKey {
-    init?(_ textStyle: NSFont.TextStyle) {
+    init?(_ textStyle: PlatformFont.TextStyle) {
+        #if canImport(UIKit)
+        #if !os(tvOS)
+        if #available(watchOS 5.0, *) {
+            if textStyle == .largeTitle {
+                self = .largeTitle
+                return
+            }
+        }
+        #endif
+        #endif
         switch textStyle {
+            #if canImport(AppKit)
+            case .largeTitle: self = .largeTitle
+            #endif
             case .title1: self = .title
             case .title2: self = .title2
             case .title3: self = .title3

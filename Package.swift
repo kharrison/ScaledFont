@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "ScaledFont",
     platforms: [
-        .macOS(.v11),
+        .iOS(.v11), .macOS(.v11), .tvOS(.v11), .watchOS(.v4)
     ],
     products: [
         .library(

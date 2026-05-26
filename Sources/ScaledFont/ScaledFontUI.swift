@@ -28,6 +28,7 @@
 
 import SwiftUI
 
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
 extension ScaledFont.StyleKey {
     init?(_ textStyle: Font.TextStyle) {
         switch textStyle {
@@ -47,6 +48,7 @@ extension ScaledFont.StyleKey {
     }
 }
 
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
 extension ScaledFont {
     /// Get the scaled font for the given text style using the
     /// style dictionary supplied at initialization.
@@ -61,24 +63,45 @@ extension ScaledFont {
     ///   a font for this text style the default system
     ///   font is returned.
 
-    internal func font(forTextStyle textStyle: Font.TextStyle) -> Font {
+    internal func font(
+        forTextStyle textStyle: Font.TextStyle,
+        design: FontDesign? = nil,
+        weight: FontWeight? = nil
+    ) -> Font {
         if #available(iOS 14.0, tvOS 14.0, watchOS 7.0, *) {
-            guard let styleKey = StyleKey(textStyle),
-                  let fontDescription = styleDictionary?[styleKey.rawValue]
-            else {
-                return Font.system(textStyle)
+            let styleKey = StyleKey(textStyle)
+            let fontDescription = styleKey.flatMap { styleDictionary?[$0.rawValue] }
+            let effectiveDesign = design ?? fontDescription?.design
+            let effectiveWeight = weight ?? fontDescription?.weight
+
+            if let fontName = fontDescription?.fontName,
+               let fontSize = fontDescription?.fontSize {
+                var font = Font.custom(fontName, size: fontSize, relativeTo: textStyle)
+                if let weight = effectiveWeight?.fontWeight {
+                    font = font.weight(weight)
+                }
+                return font
             }
 
-            return Font.custom(fontDescription.fontName, size: fontDescription.fontSize, relativeTo: textStyle)
+            var font: Font
+            if let design = effectiveDesign?.fontDesign {
+                font = Font.system(textStyle, design: design)
+            } else {
+                font = Font.system(textStyle)
+            }
+            if let weight = effectiveWeight?.fontWeight {
+                font = font.weight(weight)
+            }
+            return font
         } else {
             // Falback to UIKit methods for iOS 13
             return Font(font(forTextStyle: uiTextStyle(textStyle)))
         }
     }
 
-    private func uiTextStyle(_ textStyle: Font.TextStyle) -> NSFont.TextStyle {
+    private func uiTextStyle(_ textStyle: Font.TextStyle) -> PlatformFont.TextStyle {
         switch textStyle {
-        case .largeTitle: return .largeTitle
+        case .largeTitle: return largeTitle()
         case .title: return .title1
         case .title2: return .title2
         case .title3: return .title3
@@ -92,26 +115,63 @@ extension ScaledFont {
         @unknown default: return .body
         }
     }
-}
 
-private struct ScaledFontModifier: ViewModifier {
-    @Environment(\.scaledFont) var scaledFont
-    let textStyle: Font.TextStyle
-
-    func body(content: Content) -> some View {
-        content
-            .font(scaledFont.font(forTextStyle: textStyle))
+    // On tvOS fallback to .title1 text style as
+    // UIKit (but not SwiftUI) is missing .largeTitle.
+    private func largeTitle() -> PlatformFont.TextStyle {
+        #if os(tvOS)
+            return .title1
+        #else
+            return .largeTitle
+        #endif
     }
 }
 
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
+extension ScaledFont.FontDesign {
+    var fontDesign: Font.Design {
+        switch self {
+        case .serif: return .serif
+        case .monospaced: return .monospaced
+        }
+    }
+}
+
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
+extension ScaledFont.FontWeight {
+    var fontWeight: Font.Weight {
+        switch self {
+        case .bold: return .bold
+        }
+    }
+}
+
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
+private struct ScaledFontModifier: ViewModifier {
+    @Environment(\.scaledFont) var scaledFont
+    let textStyle: Font.TextStyle
+    let design: ScaledFont.FontDesign?
+    let weight: ScaledFont.FontWeight?
+
+    func body(content: Content) -> some View {
+        content
+            .font(scaledFont.font(forTextStyle: textStyle, design: design, weight: weight))
+    }
+}
+
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
 public extension View {
     /// Sets the text style of the scaled font for text
     /// in the view.
     /// - Parameter textStyle: A dynamic type text styles
     /// - Returns: A View that uses the scaled font with the
     ///   specified dynamic type text style.
-    func scaledFont(_ textStyle: Font.TextStyle = .body) -> some View {
-        return modifier(ScaledFontModifier(textStyle: textStyle))
+    func scaledFont(
+        _ textStyle: Font.TextStyle = .body,
+        design: ScaledFont.FontDesign? = nil,
+        weight: ScaledFont.FontWeight? = nil
+    ) -> some View {
+        return modifier(ScaledFontModifier(textStyle: textStyle, design: design, weight: weight))
     }
 }
 
@@ -119,6 +179,7 @@ private struct ScaledFontKey: EnvironmentKey {
     static var defaultValue = ScaledFont(fontName: "Default")
 }
 
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
 public extension EnvironmentValues {
     /// A custom font that supports dynamic type
     /// text styles.
@@ -128,6 +189,7 @@ public extension EnvironmentValues {
     }
 }
 
+@available(iOS 13.0, macOS 11.0, tvOS 13.0, watchOS 6.0, *)
 public extension View {
     /// Set the scaledFont environment property
     /// - Parameter scaledFont: A ScaledFont to use
@@ -137,6 +199,7 @@ public extension View {
 }
 
 #if swift(>=5.3)
+    @available(iOS 14.0, macOS 11.0, tvOS 14.0, watchOS 7.0, *)
     struct ModifierLibrary: LibraryContentProvider {
         @LibraryContentBuilder
         func modifiers(base: Text) -> [LibraryItem] {
